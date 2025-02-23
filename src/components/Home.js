@@ -14,8 +14,8 @@ const features = [
 
 const Home = () => {
   return (
-    <div className="bg-light min-vh-100 min-vw-100 d-flex flex-column align-items-center justify-content-center text-center">
-      <Container>
+    <div className="bg-light min-vh-100 vw-100 overflow-hidden d-flex flex-column align-items-center justify-content-center text-center">
+      <Container fluid>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -27,12 +27,15 @@ const Home = () => {
           <Button className="btn btn-primary px-5 py-2 mt-3">Get Started</Button>
         </motion.div>
 
-        <Row className="g-4">
+        <Row className="g-4 justify-content-center">
           {features.map((feature, index) => (
             <Col xs={12} sm={6} md={4} key={index}>
               <motion.div whileHover={{ scale: 1.05 }}>
                 <Card className="shadow-sm border-0 rounded-4 text-center p-4">
-                  <div className="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style={{ width: 60, height: 60 }}>
+                  <div
+                    className="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3"
+                    style={{ width: 60, height: 60 }}
+                  >
                     <feature.icon size={30} />
                   </div>
                   <Card.Body>
