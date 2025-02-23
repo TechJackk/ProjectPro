@@ -1,15 +1,23 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const ProjectCard = ({ project, onEdit, onDelete, onSelect }) => (
-  <div className="project-card" onClick={() => onSelect(project.id)}>
-    <img src="/image/project.svg" alt="Project" className="project-img" />
-    <h3>{project.name}</h3>
-    <p>{project.description}</p>
-    <div className="project-actions">
-      <button onClick={(e) => { e.stopPropagation(); onEdit(project); }}>Edit</button>
-      <button onClick={(e) => { e.stopPropagation(); onDelete(project.id); }}>Delete</button>
+const ProjectCard = ({ project }) => {
+  const navigate = useNavigate();
+
+  const handleViewTasks = (e) => {
+    e.stopPropagation();
+    navigate(`/${project._id}`);
+  };
+
+  return (
+    <div className="project-card p-4 bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300" onClick={handleViewTasks}>
+      <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+      <p className="text-gray-600 mb-4">{project.description}</p>
+      <div className="project-actions flex justify-center">
+        <button className="text-blue-500 hover:text-blue-700" onClick={handleViewTasks}>View Tasks</button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default ProjectCard;
