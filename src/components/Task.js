@@ -2,48 +2,19 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
 import AddTaskModal from "./AddTaskModal";
-import BtnPrimary from './BtnPrimary'
+import BtnPrimary from './BtnPrimary';
 import DropdownMenu from "./DropdownMenu";
-// import TaskModal from "./TaskModal";
 import { useParams, useNavigate } from "react-router";
-import ProjectDropdown from "./ProjectDropdown"
+import ProjectDropdown from "./ProjectDropdown";
 import axios from "axios";
 import toast from "react-hot-toast";
 import TaskModal from "./TaskModal";
 
-
 function Task() {
-
-    // const itemsFromBackend = [
-    //     { _id: uuid(), content: "First task" },
-    //     { _id: uuid(), content: "Second task" },
-    //     { _id: uuid(), content: "Third task" },
-    //     { _id: uuid(), content: "Forth task" }
-    // ];
-
-    // const columnsFromBackend = {
-    //     [uuid()]: {
-    //         name: "Requested",
-    //         items: []
-    //     },
-    //     [uuid()]: {
-    //         name: "To do",
-    //         items: []
-    //     },
-    //     [uuid()]: {
-    //         name: "In Progress",
-    //         items: []
-    //     },
-    //     [uuid()]: {
-    //         name: "Done",
-    //         items: []
-    //     }
-    // };
-
     const onDragEnd = (result, columns, setColumns) => {
         if (!result.destination) return;
         const { source, destination } = result;
-        let data = {}
+        let data = {};
         if (source.droppableId !== destination.droppableId) {
             const sourceColumn = columns[source.droppableId];
             const destColumn = columns[destination.droppableId];
@@ -73,7 +44,7 @@ function Task() {
                     ...destColumn,
                     items: destItems
                 }
-            }
+            };
         } else {
             const column = columns[source.droppableId];
             const copiedItems = [...column.items];
@@ -92,16 +63,13 @@ function Task() {
                     ...column,
                     items: copiedItems
                 }
-            }
-
+            };
         }
 
-        updateTodo(data)
+        updateTodo(data);
     };
 
     const [isAddTaskModalOpen, setAddTaskModal] = useState(false);
-
-    // const [columns, setColumns] = useState(columnsFromBackend);
     const [columns, setColumns] = useState({});
     const [isRenderChange, setRenderChange] = useState(false);
     const [isTaskOpen, setTaskOpen] = useState(false);
@@ -114,7 +82,7 @@ function Task() {
         if (!isAddTaskModalOpen || isRenderChange) {
             axios.get(`http://localhost:9000/project/${projectId}`)
                 .then((res) => {
-                    setTitle(res.data[0].title)
+                    setTitle(res.data[0].title);
                     setColumns({
                         [uuid()]: {
                             name: "Requested",
@@ -140,11 +108,11 @@ function Task() {
                                 return a.order - b.order;
                             })
                         }
-                    })
-                    setRenderChange(false)
+                    });
+                    setRenderChange(false);
                 }).catch((error) => {
-                    toast.error('Something went wrong')
-                })
+                    toast.error('Something went wrong');
+                });
         }
     }, [projectId, isAddTaskModalOpen, isRenderChange]);
 
@@ -152,26 +120,37 @@ function Task() {
         axios.put(`http://localhost:9000/project/${projectId}/todo`, data)
             .then((res) => {
             }).catch((error) => {
-                toast.error('Something went wrong')
-            })
-    }
+                toast.error('Something went wrong');
+            });
+    };
 
     const handleDelete = (e, taskId) => {
         e.stopPropagation();
         axios.delete(`http://localhost:9000/project/${projectId}/task/${taskId}`)
             .then((res) => {
-                toast.success('Task is deleted')
-                setRenderChange(true)
+                toast.success('Task is deleted');
+                setRenderChange(true);
             }).catch((error) => {
-
-                toast.error('Something went wrong')
-            })
-    }
+                toast.error('Something went wrong');
+            });
+    };
 
     const handleTaskDetails = (id) => {
         setTaskId({ projectId, id });
         setTaskOpen(true);
-    }
+    };
+
+    const addTaskToList = (newTask) => {
+        setColumns((prevColumns) => {
+            const updatedColumns = { ...prevColumns };
+            // Assuming the new task should be added to the "Requested" column
+            const requestedColumnKey = Object.keys(updatedColumns).find(key => updatedColumns[key].name === "Requested");
+            if (requestedColumnKey) {
+                updatedColumns[requestedColumnKey].items.push(newTask);
+            }
+            return updatedColumns;
+        });
+    };
 
     return (
         <div className='px-12 py-6 w-full'>
@@ -244,16 +223,15 @@ function Task() {
                                             );
                                         }}
                                     </Droppable>
-
                                 </div>
                             </div>
                         );
                     })}
-                </div >
-            </DragDropContext >
-            <AddTaskModal isAddTaskModalOpen={isAddTaskModalOpen} setAddTaskModal={setAddTaskModal} projectId={projectId} />
-            <TaskModal isOpen={isTaskOpen} setIsOpen={setTaskOpen} id={taskId} />
-        </div >
+                </div>
+            </DragDropContext>
+            <AddTaskModal isModalOpen={isAddTaskModalOpen} closeModal={() => setAddTaskModal(false)} addTaskToList={addTaskToList} />
+            <TaskModal isModalOpen={isTaskOpen} closeModal={() => setTaskOpen(false)} task={taskId} />
+        </div>
     );
 }
 
