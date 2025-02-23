@@ -24,10 +24,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex w-full pt-10">
+    <div className="relative flex w-full pt-10">
       <Sidebar onAddProject={handleAddProject} onDeleteProject={handleDeleteProject} />
-      <div className="flex flex-col items-center justify-center w-3/4">
-        <div className="w-full max-w-2xl px-4">
+      <div className="relative flex flex-col w-3/4 ml-4">
+        <div className="w-full px-4 z-10">
           {projects.map((project) => (
             <Card key={project._id} className="mb-3 shadow-sm w-full">
               <Card.Body>
@@ -40,9 +40,8 @@ const Dashboard = () => {
             </Card>
           ))}
         </div>
-        <div className="flex flex-col items-center justify-center mt-10">
-          <img src="/image/welcome.svg" className="w-full max-w-xs" alt="Welcome" />
-          <h1 className="text-lg text-gray-600 mt-4">Select or create a new project</h1>
+        <div className="absolute top-0 right-0 w-full h-full flex items-center justify-end pr-10">
+          <img src="/image/welcome.svg" className="w-3/4 max-w-2xl opacity-20" alt="Welcome" />
         </div>
       </div>
     </div>

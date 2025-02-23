@@ -5,7 +5,7 @@ import Navbar from './Navbar';
 
 const AppLayout = ({ children }) => {
   const location = useLocation();
-  const showSidebar = location.pathname !== '/';
+  const showSidebar = location.pathname !== '/' && location.pathname !== '/dashboard';
 
   return (
     <div className="app-layout">
